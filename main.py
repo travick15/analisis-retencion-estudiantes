@@ -101,6 +101,11 @@ def main():
         
         logging.info(f"Análisis completado. Los reportes se han guardado en: {args.output}")
         
+        # Consolidar reportes en un único archivo
+        logging.info("Consolidando reportes en un único archivo...")
+        from consolidate_reports import consolidate_retention_reports
+        consolidate_retention_reports()
+        
     except FileNotFoundError as e:
         logging.error(f"Error: No se encontró el archivo de entrada. {str(e)}")
         return 1
