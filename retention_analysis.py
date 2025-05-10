@@ -39,9 +39,9 @@ def filter_new_students(df, period):
     """
     Filters the DataFrame to obtain students from the given period with condition 'nuevo'.
     """
-    # Use case-insensitive matching for the condition
-    filtro = (df[COLUMN_PERIODO].astype(str) == str(period)) & \
-             (df[COLUMN_CONDICION].str.lower() == CONDICION_NUEVO.lower())
+    # Convert period to integer for comparison and use exact match for condition
+    filtro = (df[COLUMN_PERIODO] == int(period)) & \
+             (df[COLUMN_CONDICION] == CONDICION_NUEVO)
     return df.loc[filtro].copy()
 
 def check_student_continuity(df, documento, period):
@@ -49,7 +49,7 @@ def check_student_continuity(df, documento, period):
     Checks if a given student (by 'documento') appears in the specified period.
     Returns True if continuity is found, else False.
     """
-    cond = (df[COLUMN_PERIODO].astype(str) == str(period)) & \
+    cond = (df[COLUMN_PERIODO] == int(period)) & \
            (df[COLUMN_DOCUMENTO] == documento)
     return not df.loc[cond].empty
 

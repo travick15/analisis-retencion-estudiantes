@@ -27,7 +27,7 @@ COLUMN_DOCUMENTO = "Documento"   # Found in cell C1
 COLUMN_CONDICION = "Condición"   # Found in cell I1
 
 # Value to filter new students
-CONDICION_NUEVO = "nuevo"  # Case insensitive matching will be used in the code
+CONDICION_NUEVO = "Nuevo"  # Case insensitive matching will be used in the code
 
 # Logging configuration
 LOGGING_LEVEL = "INFO"

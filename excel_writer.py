@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 import logging
+from openpyxl.styles import PatternFill
+from openpyxl.formatting.rule import CellIsRule
 
 def write_report(df, output_path):
     """
@@ -18,8 +20,7 @@ def write_report(df, output_path):
             # Write the main data
             df.to_excel(writer, index=False, sheet_name='Análisis de Retención')
             
-            # Get the workbook and worksheet objects for formatting
-            workbook = writer.book
+            # Get the worksheet
             worksheet = writer.sheets['Análisis de Retención']
             
             # Auto-adjust column widths
@@ -44,25 +45,31 @@ def write_report(df, output_path):
                 if col.startswith('Continuidad en'):
                     col_letter = worksheet[1][df.columns.get_loc(col)].column_letter
                     last_row = len(df) + 1
+                    
+                    # Add green fill for TRUE values
+                    green_rule = CellIsRule(
+                        operator='equal',
+                        formula=['TRUE'],
+                        stopIfTrue=True,
+                        fill=PatternFill(start_color='90EE90', end_color='90EE90', fill_type='solid')
+                    )
+                    
+                    # Add red fill for FALSE values
+                    red_rule = CellIsRule(
+                        operator='equal',
+                        formula=['FALSE'],
+                        stopIfTrue=True,
+                        fill=PatternFill(start_color='FFB6C1', end_color='FFB6C1', fill_type='solid')
+                    )
+                    
+                    # Apply rules to the column
                     worksheet.conditional_formatting.add(
                         f'{col_letter}2:{col_letter}{last_row}',
-                        {
-                            'type': 'cell',
-                            'operator': 'equal',
-                            'formula': ['TRUE'],
-                            'stopIfTrue': True,
-                            'fill': {'fgColor': '90EE90'}  # Light green
-                        }
+                        green_rule
                     )
                     worksheet.conditional_formatting.add(
                         f'{col_letter}2:{col_letter}{last_row}',
-                        {
-                            'type': 'cell',
-                            'operator': 'equal',
-                            'formula': ['FALSE'],
-                            'stopIfTrue': True,
-                            'fill': {'fgColor': 'FFB6C1'}  # Light red
-                        }
+                        red_rule
                     )
             
             # Format percentage columns
